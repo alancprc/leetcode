@@ -1,6 +1,7 @@
 #include <atomic>
 #include <iostream>
 #include <thread>
+#include <functional>
 
 using namespace std;
 
