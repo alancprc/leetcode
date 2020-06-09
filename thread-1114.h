@@ -1,8 +1,6 @@
 #include <atomic>
-#include <mutex>
-#include <thread>
 #include <iostream>
-#include <functional>
+#include <thread>
 
 using namespace std;
 
@@ -13,38 +11,37 @@ void printThird() { std::cout << "third" << std::endl; }
 class Foo
 {
  public:
-  Foo() { lastNum = 0; }
+  Foo()
+  {
+    firstDone.test_and_set(std::memory_order_acquire);
+    secondDone.test_and_set(std::memory_order_acquire);
+  }
 
   void first(function<void()> printFirst)
   {
-    while (lastNum.load(std::memory_order_acquire) != 0) {
-    }
     // printFirst() outputs "first". Do not change or remove this line.
     printFirst();
-    lastNum.store(1, std::memory_order_release);
+    firstDone.clear(std::memory_order_release);
   }
 
   void second(function<void()> printSecond)
   {
-    // std::lock_guard<std::mutex> lock(mutex_);
-    while (lastNum.load(std::memory_order_acquire) != 1) {
-    }
+    while (firstDone.test_and_set(std::memory_order_acquire))
+      ;
     // printSecond() outputs "second". Do not change or remove this line.
     printSecond();
-    lastNum.store(2, std::memory_order_release);
+    secondDone.clear(std::memory_order_release);
   }
 
   void third(function<void()> printThird)
   {
-    // std::lock_guard<std::mutex> lock(mutex_);
-    while (lastNum.load(std::memory_order_acquire) != 2) {
-    }
+    while (secondDone.test_and_set(std::memory_order_acquire))
+      ;
     // printThird() outputs "third". Do not change or remove this line.
     printThird();
-    lastNum.store(3, std::memory_order_release);
   }
 
  private:
-  std::mutex mutex_;
-  std::atomic_int lastNum;
+  std::atomic_flag firstDone = ATOMIC_FLAG_INIT;
+  std::atomic_flag secondDone = ATOMIC_FLAG_INIT;
 };
