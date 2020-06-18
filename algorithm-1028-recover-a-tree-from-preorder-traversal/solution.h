@@ -46,10 +46,10 @@ vector<int> print(TreeNode *tree)
     nodes.pop();
     if (ptr != nullptr) {
       result.push_back(ptr->val);
-      nodes.push(ptr->left);
-      nodes.push(ptr->right);
-    } else {
-      result.push_back(0);
+      if (ptr->left != nullptr) {
+        nodes.push(ptr->left);
+        nodes.push(ptr->right);
+      }
     }
   }
   return result;

@@ -31,7 +31,7 @@ TEST_F(LeetCode, printTest)
     n401.right = &n88;
     n349.left = &n90;
 
-    EXPECT_THAT(print(&root), ElementsAre(1, 401, 0, 349, 88, 90));
+    EXPECT_THAT(print(&root), ElementsAre(1, 401, 349, 88, 90));
 }
 
 TEST_F(LeetCode, test0)
