@@ -16,6 +16,8 @@
 #include <unordered_set>
 #include <vector>
 
+#include "print-time.h"
+
 using namespace std;
 
 class Solution
@@ -27,8 +29,10 @@ class Solution
   int smallestDistancePair(vector<int>& nums, int k)
   {
     // save number:frequency into map<value, freq>
+    PrintTime pt(__func__);
     unordered_map<int, int> freq;
     for (auto n : nums) ++freq[n];
+    pt.Snap("create hash map for frequency");
 
     // get distance map <dis, repeat=m*n>
     // map<int, int> dist;
@@ -43,18 +47,18 @@ class Solution
         dist[std::abs(it1->first - it2->first)] += it1->second * it2->second;
       }
     }
+    pt.Snap("create hash map for distance");
 
     // search distance map
     // while k > freq, k -= repeat, iterator+=1;
     map<int, int> sortedDistance(dist.begin(), dist.end());
-    for (auto const &d : sortedDistance)
-        cout << d.first << " : " << d.second << endl;
     cout << sortedDistance.size() << endl;
     auto it = sortedDistance.begin();
     while (k > it->second) {
       k -= it->second;
       ++it;
     }
+    pt.Snap("calc distance");
     return it->first;
   }
 

@@ -4,6 +4,8 @@
 #include <iostream>
 #include "solution.h"
 
+#include "print-time.cpp"
+
 using namespace std;
 using namespace ::testing;
 
@@ -42,7 +44,7 @@ TEST_F(LeetCode, test3)
   // clang-format on
   int k = 25000000;
   for (int i = 0; i < loopNum; i++)
-    EXPECT_EQ(foo.smallestDistancePair(nums, k), 1);
+    EXPECT_EQ(foo.smallestDistancePair1(nums, k), 1);
 }
 
 TEST_F(LeetCode, test4)
@@ -52,5 +54,5 @@ TEST_F(LeetCode, test4)
   // clang-format on
   int k = 25000000;
   for (int i = 0; i < loopNum; i++)
-    EXPECT_EQ(foo.smallestDistancePair(nums, k), 292051);
+    EXPECT_EQ(foo.smallestDistancePair1(nums, k), 292051);
 }

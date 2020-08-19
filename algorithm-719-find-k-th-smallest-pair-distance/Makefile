@@ -2,7 +2,7 @@ all: test run
 
 .PHONY : run
 
-test : test.cpp solution.h
+test : test.cpp solution.h print-time.cpp
 	g++ -std=c++11 -O2 test.cpp -lgmock_main -lgmock -lgtest -lpthread -o $@
 
 run : test
