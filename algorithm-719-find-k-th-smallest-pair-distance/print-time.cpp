@@ -49,6 +49,9 @@ void PrintTime::Print(const timespec &start, const std::string &msg) const
   double elapsed_ms = (double)(now.tv_sec - start.tv_sec) * 1e3 +
                       (double)(now.tv_nsec - start.tv_nsec) * 1e-6;
   last_ = now;
+
+#ifndef PrintTimeOff
   if (!msg.empty())
     std::cerr << setw(12) << elapsed_ms << "ms\t" << msg << std::endl;
+#endif
 }
