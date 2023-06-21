@@ -23,11 +23,103 @@ using namespace std;
 
 class Solution
 {
- private:
-  vector<int> nums;
-
  public:
-  int smallestDistancePair(vector<int>& nums, int k)
+  int smallestDistancePairDualIndex(vector<int>& nums, int k)
+  {
+    // sort nums
+    std::sort(nums.begin(), nums.end());
+
+    int disL = 0 - 1;
+    int disR = nums.back() + 1;
+
+    size_t sz = nums.size();
+
+    for (; disL + 1 < disR;) {
+      int disMid = (disL + disR) / 2.0;
+      // calc the count of distance pair that <= disMid.
+      int cnt = 0;
+      for (size_t itL = 0, itR = itL; itL < sz; ++itL) {
+        for (; itR < sz && nums[itR] - nums[itL] <= disMid; ++itR)
+          ;
+        cnt += itR - itL - 1;
+      }
+
+      if (cnt < k) {
+        disL = disMid;
+      } else {
+        disR = disMid;
+      }
+    }
+    return disR;
+  }
+
+  int smallestDistancePairDualPointer(vector<int>& nums, int k)
+  {
+    // sort nums
+    std::sort(nums.begin(), nums.end());
+
+    int disL = 0 - 1;
+    int disR = nums.back() + 1;
+
+    typedef int* ptr;
+    ptr itBegin = &nums.front();
+    ptr itEnd   = &nums.back() + 1;
+
+    for (; disL + 1 < disR;) {
+      int disMid = (disL + disR) / 2.0;
+      // calc the count of distance pair that <= disMid.
+      int cnt = 0;
+      for (ptr itL = itBegin, itR = itL; itL < itEnd; ++itL) {
+        for (; itR < itEnd && *itR - *itL <= disMid; ++itR)
+          ;
+        cnt += itR - itL - 1;
+      }
+
+      if (cnt < k) {
+        disL = disMid;
+      } else {
+        disR = disMid;
+      }
+    }
+    return disR;
+  }
+
+  int smallestDistancePairDualIter(vector<int>& nums, int k)
+  {
+    // sort nums
+    std::sort(nums.begin(), nums.end());
+
+    int disL = 0 - 1;
+    int disR = nums.back() + 1;
+
+    typedef vector<int>::iterator ptr;
+    ptr itBegin = nums.begin();
+    ptr itEnd   = nums.end();
+
+    for (; disL + 1 < disR;) {
+      int disMid = (disL + disR) / 2.0;
+      // calc the count of distance pair that <= disMid.
+      int cnt = 0;
+      for (ptr itL = itBegin, itR = itL; itL < itEnd; ++itL) {
+        for (; itR < itEnd && *itR - *itL <= disMid; ++itR)
+          ;
+        cnt += itR - itL - 1;
+        // int n   = itR - itL - 1;
+        // printf("**itL = %li, itR = %li, cnt = %i, total = %i\n", itL - itBegin, itR - itBegin, n, cnt);
+      }
+
+      // printf("disL = %i, disR = %i, dis <= %i, cnt = %i\n", disL, disR, disMid, cnt);
+
+      if (cnt < k) {
+        disL = disMid;
+      } else {
+        disR = disMid;
+      }
+    }
+    return disR;
+  }
+
+  int smallestDistancePairSample(vector<int>& nums, int k)
   {
     sort(nums.begin(), nums.end());
     int left = 0, right = nums.back(), n = nums.size();
@@ -324,5 +416,11 @@ class Solution
     std::nth_element(dist.begin(), kth, dist.end());
     pt.Snap("calc kth distance");
     return *kth;
+  }
+  int smallestDistancePair(vector<int>& nums, int k)
+  {
+    // return smallestDistancePairDualIndex(nums, k);
+    // return smallestDistancePairDualPointer(nums, k);
+    return smallestDistancePairDualIter(nums, k);
   }
 };
